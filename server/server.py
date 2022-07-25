@@ -2,7 +2,6 @@ from socket import socket, AF_INET, SOCK_STREAM
 from threading import Thread
 import time
 from unicodedata import name
-
 from account import account
 
 
@@ -18,29 +17,31 @@ SERVER.bind(ADDR)
 def broadcast(msg, name):
     for account in accounts:
         client = account.client
-        client.send(bytes(name + ":", "utf8") + msg)
+        client.send(bytes(name, "utf8") + msg)
 
 
 
 def handle_client(account):
     client = account.client
+    account.set_name(name)
     name = client.recv(BUFSIZE).decode("urf8")
-    msg = f"{name} has joind the chat"
-    broadcast(msg)
+    msg = bytes(f"{name} has joind the chat", "utf8")
+    broadcast(msg, "")
 
 
     while True:
         try:
             msg = client.recv(BUFSIZE)
-            print(f"{name}:", msg.decode("utf8"))
             if msg == bytes("{Quit}", "utf8"):
-                broadcast(f"{name} has left the chat", "")
                 client.send(bytes("{Quit}", "utf8"))
                 client.close()
                 accounts.remove(account)
+                broadcast(f"{name} has left the chat", "")
+                print(f"[DISCONNECTED] {name} disconnected")
                 break
             else:
-                broadcast(msg, name)
+                broadcast(msg, name+" :")
+                print(f"{name}:", msg.decode("utf8"))
         except Exception as e:
              print("[EXCEPTION]", e)
              break
