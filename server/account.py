@@ -1,4 +1,4 @@
-class account:
+class Account:
     def __init__(self, ADDR, client):
         self.ADDR = ADDR
         self.client = client

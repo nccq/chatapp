@@ -44,3 +44,6 @@ class client:
         self.lock.release()
         return self.messages
 
+
+    def disconnect(self):
+        self.send_message("{quit}")

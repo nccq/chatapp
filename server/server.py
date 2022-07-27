@@ -1,9 +1,8 @@
-from socket import socket, AF_INET, SOCK_STREAM
-from threading import Thread
 import time
+from socket import AF_INET, SOCK_STREAM, socket
+from threading import Thread
 from unicodedata import name
-from account import account
-
+from account import Account
 
 HOST = 'localhost'
 PORT = 5500
@@ -54,7 +53,7 @@ def wait_for_connection():
     while run:
         try:
             client, ADDR = SERVER.accept()
-            account = account(ADDR, name, client)
+            account = Account(ADDR, name, client)
             accounts.append(account)
             print(f"[CONNECTION] {ADDR} connected to the server at {time.time()}")
             Thread(target=handle_client, args=(account)).start()
