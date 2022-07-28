@@ -32,10 +32,9 @@ def handle_client(account):
         try:
             msg = client.recv(BUFSIZE)
             if msg == bytes("{Quit}", "utf8"):
-                client.send(bytes("{Quit}", "utf8"))
                 client.close()
                 accounts.remove(account)
-                broadcast(f"{name} has left the chat", "")
+                broadcast(bytes(f"{name} has left the chat", "utf8"), "")
                 print(f"[DISCONNECTED] {name} disconnected")
                 break
             else:
@@ -49,17 +48,16 @@ def handle_client(account):
 
 
 def wait_for_connection():
-    run = True
-    while run:
+    while True:
         try:
             client, ADDR = SERVER.accept()
-            account = Account(ADDR, name, client)
+            account = Account(ADDR, client)
             accounts.append(account)
             print(f"[CONNECTION] {ADDR} connected to the server at {time.time()}")
-            Thread(target=handle_client, args=(account)).start()
+            Thread(target=handle_client, args=(account,)).start()
         except Exception as e:
             print("[EXCEPTION]", e)
-            run = False
+            break
 
     print("SERVER CRASHED")
 

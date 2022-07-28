@@ -27,7 +27,6 @@ class client:
                 self.lock.acquire()
                 self.messages.append(msg)
                 self.lock.release()
-                print(msg)
             except Exception as e:
                 print("EXCEPTION", e)
                 break
@@ -40,9 +39,11 @@ class client:
 
 
     def get_messages(self):
+        msgs_copy = self.messages[:]
         self.lock.acquire()
+        self.messages = []
         self.lock.release()
-        return self.messages
+        return msgs_copy
 
 
     def disconnect(self):
