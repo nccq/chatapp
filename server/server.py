@@ -1,7 +1,7 @@
 import time
 from socket import AF_INET, SOCK_STREAM, socket
 from threading import Thread
-from unicodedata import name
+
 from account import Account
 
 HOST = 'localhost'
@@ -16,20 +16,23 @@ SERVER.bind(ADDR)
 def broadcast(msg, name):
     for account in accounts:
         client = account.client
-        client.send(bytes(name, "utf8") + msg)
+        try:
+            client.send(bytes(name, "utf8") + msg)
+        except Exception as e:
+            print("[EXCEPTION]", e)
 
 
 
 def handle_client(account):
     client = account.client
-    account.set_name(name)
     name = client.recv(BUFSIZE).decode("urf8")
+    account.set_name(name)
     msg = bytes(f"{name} has joind the chat", "utf8")
     broadcast(msg, "")
 
 
     while True:
-        try:
+        
             msg = client.recv(BUFSIZE)
             if msg == bytes("{Quit}", "utf8"):
                 client.close()
@@ -40,9 +43,7 @@ def handle_client(account):
             else:
                 broadcast(msg, name+" :")
                 print(f"{name}:", msg.decode("utf8"))
-        except Exception as e:
-             print("[EXCEPTION]", e)
-             break
+
 
 
 
@@ -62,8 +63,8 @@ def wait_for_connection():
     print("SERVER CRASHED")
 
 
-if __name__ == '__main__':
-    SERVER.listen(5)
+if __name__ == "__main__":
+    SERVER.listen(10)
     print("waiting for connection")
     ACCEPT_THREAD = Thread(target=wait_for_connection)
     ACCEPT_THREAD.start()
