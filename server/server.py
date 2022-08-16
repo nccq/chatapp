@@ -25,8 +25,8 @@ def broadcast(msg, name):
 
 def handle_client(account):
     client = account.client
-    name = client.recv(BUFSIZE).decode("urf8")
-    account.set_name(name)
+    name = client.recv(BUFSIZE).decode("utf8")
+    account.set_name(name)   
     msg = bytes(f"{name} has joind the chat", "utf8")
     broadcast(msg, "")
 
