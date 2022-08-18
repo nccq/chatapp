@@ -19,14 +19,18 @@ def logout():
     return redirect(url_for("login"))
 
 
+@app.route("/")
 @app.route("/home")
-
 def home():
     #if NAME_KEY not in session:
      #   return redirect(url_for("login"))
 
     #name = session[NAME_KEY]
     return render_template("index.html") 
+
+
+def run():
+    print("clicked")
 
 
 if __name__ == "__main__":
