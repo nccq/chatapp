@@ -1,5 +1,5 @@
 import config
-from flask import session
+from flask import sessionpy
 from flask_socketio import SocketIO
 from application import create_app
 from application.database import DataBase
